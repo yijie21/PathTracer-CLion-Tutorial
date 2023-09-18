@@ -16,7 +16,7 @@ This is a GLSL-based PathTracer developed using CLion, my preferred IDE due to i
 
    1. Go to File->Settings->Build, Execution, Deployment->Toolchains
 
-      ![Clion](./assets/Clion.png)
+      ![Clion](./assets/clion.png)
 
    2. In the setting `Toolset`, if the `Bundled MinGW` is not set as default, just hit `Download...` to download the default mingw and click `Apply` and `OK` to finish the setting for mingw.
 
