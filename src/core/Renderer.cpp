@@ -429,14 +429,8 @@ namespace PathTracer
             pathtraceDefines += "#define OPT_RR_DEPTH " + std::to_string(scene->renderOptions.RRDepth) + "\n";
         }
 
-        if (scene->renderOptions.enableUniformLight)
-            pathtraceDefines += "#define OPT_UNIFORM_LIGHT\n";
-
         if (scene->renderOptions.openglNormalMap)
             pathtraceDefines += "#define OPT_OPENGL_NORMALMAP\n";
-
-        if (scene->renderOptions.hideEmitters)
-            pathtraceDefines += "#define OPT_HIDE_EMITTERS\n";
 
         if (scene->renderOptions.enableBackground)
         {
@@ -459,9 +453,6 @@ namespace PathTracer
             }
         }
 
-        if (scene->renderOptions.enableRoughnessMollification)
-            pathtraceDefines += "#define OPT_ROUGHNESS_MOLLIFICATION\n";
-
         for (int i = 0; i < scene->materials.size(); i++)
         {
             if ((int)scene->materials[i].mediumType != MediumType::None)
@@ -470,9 +461,6 @@ namespace PathTracer
                 break;
             }
         }
-
-        if (scene->renderOptions.enableVolumeMIS)
-            pathtraceDefines += "#define OPT_VOL_MIS\n";
 
         if (pathtraceDefines.size() > 0)
         {
@@ -796,8 +784,6 @@ namespace PathTracer
         glUniform1f(glGetUniformLocation(shaderObject, "envMapRot"), scene->renderOptions.envMapRot / 360.0f);
         glUniform1i(glGetUniformLocation(shaderObject, "maxDepth"), scene->renderOptions.maxDepth);
         glUniform2f(glGetUniformLocation(shaderObject, "tileOffset"), (float)tile.x * invNumTiles.x, (float)tile.y * invNumTiles.y);
-        glUniform3f(glGetUniformLocation(shaderObject, "uniformLightCol"), scene->renderOptions.uniformLightCol.x, scene->renderOptions.uniformLightCol.y, scene->renderOptions.uniformLightCol.z);
-        glUniform1f(glGetUniformLocation(shaderObject, "roughnessMollificationAmt"), scene->renderOptions.roughnessMollificationAmt);
         glUniform1i(glGetUniformLocation(shaderObject, "frameNum"), frameCounter);   
         pathTraceShader->StopUsing();
 
@@ -815,8 +801,6 @@ namespace PathTracer
         glUniform1f(glGetUniformLocation(shaderObject, "envMapRot"), scene->renderOptions.envMapRot / 360.0f);
         glUniform1i(glGetUniformLocation(shaderObject, "maxDepth"), scene->dirty ? 2 : scene->renderOptions.maxDepth);
         glUniform3f(glGetUniformLocation(shaderObject, "camera.position"), scene->camera->position.x, scene->camera->position.y, scene->camera->position.z);
-        glUniform3f(glGetUniformLocation(shaderObject, "uniformLightCol"), scene->renderOptions.uniformLightCol.x, scene->renderOptions.uniformLightCol.y, scene->renderOptions.uniformLightCol.z);
-        glUniform1f(glGetUniformLocation(shaderObject, "roughnessMollificationAmt"), scene->renderOptions.roughnessMollificationAmt);
         pathTraceShaderLowRes->StopUsing();
 
         tonemapShader->Use();

@@ -1,7 +1,6 @@
 
 
 #ifdef OPT_ENVMAP
-#ifndef OPT_UNIFORM_LIGHT
 
 vec2 BinarySearch(float value)
 {
@@ -60,5 +59,4 @@ vec4 SampleEnvMap(inout vec3 color)
     return vec4(-sin(theta) * cos(phi), cos(theta), -sin(theta) * sin(phi), (pdf * envMapRes.x * envMapRes.y) / (TWO_PI * PI * sin(theta)));
 }
 
-#endif
 #endif

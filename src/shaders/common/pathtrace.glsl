@@ -73,10 +73,6 @@ void GetMaterial(inout State state, in Ray r)
         state.ffnormal = dot(origNormal, r.direction) <= 0.0 ? state.normal : -state.normal;
     }
 
-#ifdef OPT_ROUGHNESS_MOLLIFICATION
-    if(state.depth > 0)
-        mat.roughness = max(mix(0.0, state.mat.roughness, roughnessMollificationAmt), mat.roughness);
-#endif
 
     // Emission Map
     if (texIDs.w >= 0)
@@ -91,7 +87,7 @@ void GetMaterial(inout State state, in Ray r)
 }
 
 // TODO: Recheck all of this
-#if defined(OPT_MEDIUM) && defined(OPT_VOL_MIS)
+#if defined(OPT_MEDIUM)
 vec3 EvalTransmittance(Ray r)
 {
     LightSampleRec lightSample;
@@ -141,7 +137,6 @@ vec3 DirectLight(in Ray r, in State state, bool isSurface)
 
     // Environment Light
 #ifdef OPT_ENVMAP
-#ifndef OPT_UNIFORM_LIGHT
     {
         vec3 color;
         vec4 dirPdf = SampleEnvMap(Li);
@@ -150,7 +145,7 @@ vec3 DirectLight(in Ray r, in State state, bool isSurface)
 
         Ray shadowRay = Ray(scatterPos, lightDir);
 
-#if defined(OPT_MEDIUM) && defined(OPT_VOL_MIS)
+#if defined(OPT_MEDIUM)
         // If there are volumes in the scene then evaluate transmittance rather than a binary anyhit test
         Li *= EvalTransmittance(shadowRay);
 
@@ -187,7 +182,6 @@ vec3 DirectLight(in Ray r, in State state, bool isSurface)
 #endif
     }
 #endif
-#endif
 
     // Analytic Lights
 #ifdef OPT_LIGHTS
@@ -217,7 +211,7 @@ vec3 DirectLight(in Ray r, in State state, bool isSurface)
             Ray shadowRay = Ray(scatterPos, lightSample.direction);
 
             // If there are volumes in the scene then evaluate transmittance rather than a binary anyhit test
-#if defined(OPT_MEDIUM) && defined(OPT_VOL_MIS)
+#if defined(OPT_MEDIUM)
             Li *= EvalTransmittance(shadowRay);
 
             if (isSurface)
@@ -284,14 +278,9 @@ vec4 PathTrace(Ray r)
             if (state.depth == 0)
                 alpha = 0.0;
 #endif
-
-#ifdef OPT_HIDE_EMITTERS
-            if(state.depth > 0)
-#endif
             {
-#ifdef OPT_UNIFORM_LIGHT
-                radiance += uniformLightCol * throughput;
-#else
+
+
 #ifdef OPT_ENVMAP
                 vec4 envMapColPdf = EvalEnvMap(r);
 
@@ -301,7 +290,7 @@ vec4 PathTrace(Ray r)
                 if (state.depth > 0)
                     misWeight = PowerHeuristic(scatterSample.pdf, envMapColPdf.w);
 
-#if defined(OPT_MEDIUM) && !defined(OPT_VOL_MIS)
+#if defined(OPT_MEDIUM)
                 if(!surfaceScatter)
                     misWeight = 1.0f;
 #endif
@@ -309,7 +298,7 @@ vec4 PathTrace(Ray r)
                 if(misWeight > 0)
                     radiance += misWeight * envMapColPdf.rgb * throughput * envMapIntensity;
 #endif
-#endif
+
              }
              break;
         }
@@ -319,6 +308,7 @@ vec4 PathTrace(Ray r)
         // Gather radiance from emissive objects. Emission from meshes is not importance sampled
         radiance += state.mat.emission * throughput;
         
+
 #ifdef OPT_LIGHTS
 
         // Gather radiance from light and use scatterSample.pdf from previous bounce for MIS
@@ -329,7 +319,7 @@ vec4 PathTrace(Ray r)
             if (state.depth > 0)
                 misWeight = PowerHeuristic(scatterSample.pdf, lightSample.pdf);
 
-#if defined(OPT_MEDIUM) && !defined(OPT_VOL_MIS)
+#if defined(OPT_MEDIUM)
             if(!surfaceScatter)
                 misWeight = 1.0f;
 #endif

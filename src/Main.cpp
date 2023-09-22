@@ -401,23 +401,13 @@ void MainLoop(void* arg)
 
             reloadShaders |= ImGui::Checkbox("Enable Russian Roulette", &renderOptions.enableRR);
             reloadShaders |= ImGui::SliderInt("Russian Roulette Depth", &renderOptions.RRDepth, 1, 10);
-            reloadShaders |= ImGui::Checkbox("Enable Roughness Mollification", &renderOptions.enableRoughnessMollification);
-            optionsChanged |= ImGui::SliderFloat("Roughness Mollification Amount", &renderOptions.roughnessMollificationAmt, 0, 1);
-            reloadShaders |= ImGui::Checkbox("Enable Volume MIS", &renderOptions.enableVolumeMIS);
         }
 
         if (ImGui::CollapsingHeader("Environment"))
         {
-            reloadShaders |= ImGui::Checkbox("Enable Uniform Light", &renderOptions.enableUniformLight);
-
-            Vec3 uniformLightCol = Vec3::Pow(renderOptions.uniformLightCol, 1.0 / 2.2);
-            optionsChanged |= ImGui::ColorEdit3("Uniform Light Color (Gamma Corrected)", (float*)(&uniformLightCol), 0);
-            renderOptions.uniformLightCol = Vec3::Pow(uniformLightCol, 2.2);
-
             reloadShaders |= ImGui::Checkbox("Enable Environment Map", &renderOptions.enableEnvMap);
             optionsChanged |= ImGui::SliderFloat("Enviornment Map Intensity", &renderOptions.envMapIntensity, 0.1f, 10.0f);
             optionsChanged |= ImGui::SliderFloat("Enviornment Map Rotation", &renderOptions.envMapRot, 0.0f, 360.0f);
-            reloadShaders |= ImGui::Checkbox("Hide Emitters", &renderOptions.hideEmitters);
             reloadShaders |= ImGui::Checkbox("Enable Background", &renderOptions.enableBackground);
             optionsChanged |= ImGui::ColorEdit3("Background Color", (float*)&renderOptions.backgroundCol, 0);
             reloadShaders |= ImGui::Checkbox("Transparent Background", &renderOptions.transparentBackground);

@@ -5,9 +5,6 @@ bool ClosestHit(Ray r, inout State state, inout LightSampleRec lightSample)
 
 #ifdef OPT_LIGHTS
     // Intersect Emitters
-#ifdef OPT_HIDE_EMITTERS
-if(state.depth > 0)
-#endif
     for (int i = 0; i < numOfLights; i++)
     {
         // Fetch light Data

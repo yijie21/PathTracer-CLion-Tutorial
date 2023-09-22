@@ -260,14 +260,10 @@ namespace PathTracer
                 char enableRR[10] = "none";
                 char enableAces[10] = "none";
                 char openglNormalMap[10] = "none";
-                char hideEmitters[10] = "none";
                 char transparentBackground[10] = "none";
                 char enableBackground[10] = "none";
                 char independentRenderSize[10] = "none";
                 char enableTonemap[10] = "none";
-                char enableRoughnessMollification[10] = "none";
-                char enableVolumeMIS[10] = "none";
-                char enableUniformLight[10] = "none";
 
                 while (fgets(line, kMaxLineLength, file))
                 {
@@ -290,17 +286,11 @@ namespace PathTracer
                     sscanf(line, " texarraywidth %i", &renderOptions.textureWidth);
                     sscanf(line, " texarrayheight %i", &renderOptions.textureHeight);
                     sscanf(line, " openglnormalmap %s", openglNormalMap);
-                    sscanf(line, " hideemitters %s", hideEmitters);
                     sscanf(line, " enablebackground %s", enableBackground);
                     sscanf(line, " transparentbackground %s", transparentBackground);
                     sscanf(line, " backgroundcolor %f %f %f", &renderOptions.backgroundCol.x, &renderOptions.backgroundCol.y, &renderOptions.backgroundCol.z);
                     sscanf(line, " independentrendersize %s", independentRenderSize);
                     sscanf(line, " envmaprotation %f", &renderOptions.envMapRot);
-                    sscanf(line, " enableroughnessmollification %s", enableRoughnessMollification);
-                    sscanf(line, " roughnessmollificationamt %f", &renderOptions.roughnessMollificationAmt);
-                    sscanf(line, " enablevolumemis %s", enableVolumeMIS);
-                    sscanf(line, " enableuniformlight %s", enableUniformLight);
-                    sscanf(line, " uniformlightcolor %f %f %f", &renderOptions.uniformLightCol.x, &renderOptions.uniformLightCol.y, &renderOptions.uniformLightCol.z);
                 }
 
                 if (strcmp(envMap, "none") != 0)
@@ -326,11 +316,6 @@ namespace PathTracer
                 else if (strcmp(openglNormalMap, "true") == 0)
                     renderOptions.openglNormalMap = true;
 
-                if (strcmp(hideEmitters, "false") == 0)
-                    renderOptions.hideEmitters = false;
-                else if (strcmp(hideEmitters, "true") == 0)
-                    renderOptions.hideEmitters = true;
-
                 if (strcmp(enableBackground, "false") == 0)
                     renderOptions.enableBackground = false;
                 else if (strcmp(enableBackground, "true") == 0)
@@ -350,21 +335,6 @@ namespace PathTracer
                     renderOptions.enableTonemap = false;
                 else if (strcmp(enableTonemap, "true") == 0)
                     renderOptions.enableTonemap = true;
-
-                if (strcmp(enableRoughnessMollification, "false") == 0)
-                    renderOptions.enableRoughnessMollification = false;
-                else if (strcmp(enableRoughnessMollification, "true") == 0)
-                    renderOptions.enableRoughnessMollification = true;
-
-                if (strcmp(enableVolumeMIS, "false") == 0)
-                    renderOptions.enableVolumeMIS = false;
-                else if (strcmp(enableVolumeMIS, "true") == 0)
-                    renderOptions.enableVolumeMIS = true;
-
-                if (strcmp(enableUniformLight, "false") == 0)
-                    renderOptions.enableUniformLight = false;
-                else if (strcmp(enableUniformLight, "true") == 0)
-                    renderOptions.enableUniformLight = true;
 
                 if (!renderOptions.independentRenderSize)
                     renderOptions.windowResolution = renderOptions.renderResolution;
